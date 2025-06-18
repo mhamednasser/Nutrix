@@ -1,0 +1,11 @@
+# Ignore appsettings.json
+appsettings.json
+
+# Ignore development settings with sensitive data
+appsettings.Development.json
+
+# Ignore Visual Studio files
+.vs/
+.vscode/
+bin/
+obj/
