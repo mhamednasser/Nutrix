@@ -295,7 +295,7 @@ We welcome contributions from the community! Here's how you can help make Nutrix
 <div align="center">
 
 ### **Mohamed Nasser**
-*Senior .NET Developer & AI Integration Specialist*
+*.NET Developer & AI Integration Specialist*
 
 [![Email](https://img.shields.io/badge/Email-nasermohammed391%40gmail.com-red?style=for-the-badge&logo=gmail&logoColor=white)](mailto:nasermohammed391@gmail.com)
 [![GitHub](https://img.shields.io/badge/GitHub-mhamednasser-black?style=for-the-badge&logo=github&logoColor=white)](https://github.com/mhamednasser)
