@@ -1,0 +1,88 @@
+version: '3.8'
+
+services:
+  nutrix-api:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:8080;https://+:8081
+      
+      # JWT Configuration
+      - JwtSettings__SecretKey=${JWT_SECRET_KEY}
+      - JwtSettings__Issuer=Nutrix.API
+      - JwtSettings__Audience=Nutrix.Client
+      - JwtSettings__ExpiryInMinutes=120
+      
+      # Google OAuth
+      - GoogleAuth__ClientId=${GOOGLE_CLIENT_ID}
+      - GoogleAuth__ClientSecret=${GOOGLE_CLIENT_SECRET}
+      
+      # Gemini AI Configuration
+      - GeminiAI__ApiKey=${GEMINI_AI_API_KEY}
+      - GeminiAI__ProjectId=${GOOGLE_PROJECT_ID}
+      - GeminiAI__ProjectNumber=${GOOGLE_PROJECT_NUMBER}
+      
+      # Gemini Plan Configuration
+      - GeminiPlan__ApiKey=${GEMINI_PLAN_API_KEY}
+      - GeminiPlan__Model=gemini-2.0-flash-exp
+      - GeminiPlan__MaxTokens=4096
+      - GeminiPlan__Temperature=0.1
+      - GeminiPlan__TimeoutSeconds=30
+      - GeminiPlan__TopK=20
+      - GeminiPlan__TopP=0.8
+      
+      # Gemini ChatBot Configuration
+      - GeminiChatBot__ApiKey=${GEMINI_CHATBOT_API_KEY}
+      - GeminiChatBot__Model=gemini-2.0-flash-001
+      - GeminiChatBot__MaxTokens=2048
+      - GeminiChatBot__Temperature=0.7
+      - GeminiChatBot__TopK=40
+      - GeminiChatBot__TopP=0.95
+      - GeminiChatBot__TimeoutSeconds=30
+      
+      # FastAPI Settings
+      - FastAPISettings__Endpoint=${FASTAPI_ENDPOINT}
+      
+      # Database Configuration
+      - DatabaseSettings__ConnectionString=${DATABASE_CONNECTION_STRING}
+      
+      # Email Configuration
+      - EmailSettings__SmtpServer=smtp.gmail.com
+      - EmailSettings__SmtpPort=587
+      - EmailSettings__SenderEmail=${SENDER_EMAIL}
+      - EmailSettings__SenderPassword=${SENDER_PASSWORD}
+      - EmailSettings__SenderName=Nutrix Team
+      - EmailSettings__EnableSsl=true
+      - EmailSettings__FrontendUrl=${FRONTEND_URL}
+      
+    depends_on:
+      - sqlserver
+    networks:
+      - nutrix-network
+    restart: unless-stopped
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=${SQL_SA_PASSWORD}
+      - MSSQL_PID=Express
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    networks:
+      - nutrix-network
+    restart: unless-stopped
+
+volumes:
+  sqlserver_data:
+
+networks:
+  nutrix-network:
+    driver: bridge
